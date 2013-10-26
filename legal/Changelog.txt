@@ -1,0 +1,6 @@
+/* AGPL: The work must carry prominent notices stating that you modified it, and giving a relevant date.
+	ugh, blugh. h'gah.
+ */
+This version of Applpi is a modified version. This file lists the geneology of this project.
+2009-2013, created & maintained by D Hollingsworth.
+25 Oct 2013, modified by Nicholas M Prado (Nzen).
