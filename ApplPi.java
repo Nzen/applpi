@@ -18,7 +18,6 @@ public static void main(String[] args)
 			try
 			{
 				ApplPi frame = new ApplPi();
-				System.out.println( "Outer" );
 			} catch (Exception e)
 			{
 				e.printStackTrace();
@@ -30,8 +29,8 @@ public static void main(String[] args)
   private ApplPi() {
 	Main view = new Main();
 	getContentPane().add(view);
-	setTitle("ApplPi3.1 sourceforge.net/projects/applpi (c)2009-13 D Hollingsworth");
-	setSize(600, 80);
+	setTitle("ApplP i3.2 sourceforge.net/projects/applpi c:2009-13 D Hollingsworth");
+	setSize(900, 160);
 	setDefaultCloseOperation(3);
 	setVisible(true);
   }

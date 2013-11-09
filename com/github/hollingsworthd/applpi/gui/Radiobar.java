@@ -65,7 +65,7 @@ public class Radiobar extends JToolBar {
 	//private int curComp = 0;
 	private Thread thread = null;
 	private boolean isPlaying = false;
-	private JPanel controls;
+	//private JPanel controls;
 	JRadioButton rdMoon;
 	JRadioButton rdStout;
 	JRadioButton rdCrisp;
@@ -144,12 +144,12 @@ public class Radiobar extends JToolBar {
 	public Radiobar() {
 		setBounds( 100, 100, 520, 148 );
 		//controls = new JPanel();
-		//controls.setBorder( new EmptyBorder( 5, 5, 5, 5 ) );
+		setBorder( new EmptyBorder( 5, 5, 5, 5 ) );
 		//controls.setContentPane( );
-		JButton play = new JButton("ab");
-		controls.add(play);
+		//JButton play = new JButton("ab");
+		//controls.add(play);
 		//controls.setTitle("ApplPi#3.1 sourceforge.net/projects/applpi (c) 2009-2013 Daniel Hollingsworth");
-		/*controls.setLayout(new GridLayout(3, 6, 0, 0));
+		setLayout(new GridLayout(3, 6, 0, 0));
 
 		ButtonGroup rabtnGroup; // bind radios
 		rdMoon = new JRadioButton("\u2648", true);
@@ -164,18 +164,18 @@ public class Radiobar extends JToolBar {
 		rdWicks = new JRadioButton("\u2651");
 		rdAle = new JRadioButton("\u2652");
 		rdCrunch = new JRadioButton("\u2653");
-		controls.add(rdMoon);
-		controls.add(rdStout);
-		controls.add(rdCrisp);
-		controls.add(rdFlakes);
-		controls.add(rdLoops);
-		controls.add(rdBeer);
-		controls.add(rdCharm);
-		controls.add(rdCastle);
-		controls.add(rdRock);
-		controls.add(rdWicks);
-		controls.add(rdAle);
-		controls.add(rdCrunch);
+		add(rdMoon);
+		add(rdStout);
+		add(rdCrisp);
+		add(rdFlakes);
+		add(rdLoops);
+		add(rdBeer);
+		add(rdCharm);
+		add(rdCastle);
+		add(rdRock);
+		add(rdWicks);
+		add(rdAle);
+		add(rdCrunch);
 
 		rabtnGroup = new ButtonGroup();
 		rabtnGroup.add( rdMoon );
@@ -193,8 +193,8 @@ public class Radiobar extends JToolBar {
 
 		Component horizontalStrut_2 = Box.createHorizontalStrut(20);
 		Component horizontalStrut = Box.createHorizontalStrut(20);
-		controls.add(horizontalStrut_2);
-		controls.add(horizontalStrut);
+		add(horizontalStrut_2);
+		add(horizontalStrut);
 
 		JButton play = new JButton(new AbstractAction("Go") {
 			public void actionPerformed(ActionEvent e) {
@@ -202,7 +202,7 @@ public class Radiobar extends JToolBar {
 				togglePlay();
 			}
 		});
-		controls.add(play);
+		add(play);
 
 		rootSpinner = new JSpinner(new SpinnerNumberModel(DEFAULT_ROOT, 1,
 				20000000, 1));
@@ -212,7 +212,7 @@ public class Radiobar extends JToolBar {
 						rootSpinner.getValue() / 16d);
 			}
 		});
-		controls.add(rootSpinner);*/
+		add(rootSpinner);
 	}
 /*
 		JButton addTrack = new JButton(new AbstractAction("+") {
