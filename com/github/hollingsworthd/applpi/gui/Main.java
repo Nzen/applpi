@@ -21,11 +21,17 @@
 package com.github.hollingsworthd.applpi.gui;
 
 import javax.swing.JPanel;
+import javax.swing.border.EmptyBorder;
 
 public class Main extends JPanel {
-	private Toolbar toolbar = new Toolbar();
+	private static final long serialVersionUID = 1L;
+	private Radiobar toolbar;
+
 	public Main(){
+		Radiobar toolbar = new Radiobar();
         add(toolbar);
+		setBounds( 100, 100, 520, 148 );
+		setBorder( new EmptyBorder( 5, 5, 5, 5 ) );
     }
     
     public void stop(){

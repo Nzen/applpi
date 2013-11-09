@@ -23,13 +23,18 @@ package com.github.hollingsworthd.applpi.gui;
 import java.awt.event.ActionEvent;
 
 import javax.swing.AbstractAction;
-import javax.swing.JButton;
+import javax.swing.Box;
+import java.awt.Component;
+import java.awt.GridLayout;
 import javax.swing.JFrame;
-import javax.swing.JLabel;
 import javax.swing.JPanel;
-import javax.swing.JSpinner;
 import javax.swing.JToolBar;
+import javax.swing.JButton;
+import javax.swing.JSpinner;
+import javax.swing.ButtonGroup;
+import javax.swing.JRadioButton;
 import javax.swing.SpinnerNumberModel;
+import javax.swing.border.EmptyBorder;
 import javax.swing.event.ChangeEvent;
 import javax.swing.event.ChangeListener;
 
@@ -48,7 +53,8 @@ import com.github.hollingsworthd.applpi.composition.ToastCrunch;
 import com.github.hollingsworthd.applpi.core.Composition;
 import com.github.hollingsworthd.applpi.core.Play;
 
-public class Toolbar extends JToolBar {
+public class Radiobar extends JToolBar {
+	private static final long serialVersionUID = 1L;
 	private static final double DEFAULT_ROOT = 440;
 	private static double root = DEFAULT_ROOT / 16;
 	private Composition[] compositions = new Composition[] { new LuckyCharms(),
@@ -56,47 +62,57 @@ public class Toolbar extends JToolBar {
 			new ToastCrunch(), new SummerAle(), new Newcastle(),
 			new Guinness(), new ChocolateStout(), new BlueMoon(),
 			new RollingRock(), new Smithwicks(), };
-	private int curComp = 0;
-	private int maxIndex = compositions.length - 1;
+	//private int curComp = 0;
 	private Thread thread = null;
 	private boolean isPlaying = false;
-	private JButton prev;
-	private JButton play;
-	private JButton next;
-	private JSpinner rootSpinner;
+	private JPanel controls;
+	JRadioButton rdMoon;
+	JRadioButton rdStout;
+	JRadioButton rdCrisp;
+	JRadioButton rdFlakes;
+	JRadioButton rdLoops;
+	JRadioButton rdBeer;
+	JRadioButton rdCharm;
+	JRadioButton rdCastle;
+	JRadioButton rdRock;
+	JRadioButton rdWicks;
+	JRadioButton rdAle;
+	JRadioButton rdCrunch;
+	JSpinner rootSpinner;
 
 	public synchronized boolean isPlaying() {
 		return isPlaying;
 	}
-
-	JFrame mainFrame;
-	JLabel label;
 
 	public synchronized void setPlaying(boolean isPlaying) {
 		this.isPlaying = isPlaying;
 	}
 
 	public synchronized int getCurComp() {
-		return curComp;
-	}
-
-	public synchronized boolean incCurComp() {
-		curComp++;
-		if (curComp > maxIndex) {
-			curComp = maxIndex;
-			return false;
-		}
-		return true;
-	}
-
-	public synchronized boolean decCurComp() {
-		curComp--;
-		if (curComp < 0) {
-			curComp = 0;
-			return false;
-
-		}
-		return true;
+		if( rdMoon.isSelected() )
+			{ return 0; }
+		else if( rdStout.isSelected() )
+			{ return 1; }
+		else if( rdCrisp.isSelected() )
+			{ return 2; }
+		else if( rdFlakes.isSelected() )
+			{ return 3; }
+		else if( rdLoops.isSelected() )
+			{ return 4; }
+		else if( rdBeer.isSelected() )
+			{ return 5; }
+		else if( rdCharm.isSelected() )
+			{ return 6; }
+		else if( rdCastle.isSelected() )
+			{ return 7; }
+		else if( rdRock.isSelected() )
+			{ return 8; }
+		else if( rdWicks.isSelected() )
+			{ return 9; }
+		else if( rdAle.isSelected() )
+			{ return 10; }
+		else //if( rdCrunch.isSelected() )
+			{ return 11; }
 	}
 
 	public void close() {
@@ -122,82 +138,87 @@ public class Toolbar extends JToolBar {
 			setPlaying(true);
 			thread.start();
 		}
-		play.setSelected(isPlaying());
+		//play.setSelected(isPlaying());
 	}
 
-	public Toolbar() {
-		JPanel controls = new JPanel();
-		prev = new JButton(new AbstractAction("<") {
-			public void actionPerformed(ActionEvent e) {
-				if (isPlaying()) {
-					togglePlay();
-				}
-				if (decCurComp()) {
-					compositions[getCurComp()].startPlaying();
-					compositions[getCurComp()].setRoot((Double) rootSpinner
-							.getValue() / 16d);
-					togglePlay();
-				}
+	public Radiobar() {
+		setBounds( 100, 100, 520, 148 );
+		//controls = new JPanel();
+		//controls.setBorder( new EmptyBorder( 5, 5, 5, 5 ) );
+		//controls.setContentPane( );
+		JButton play = new JButton("ab");
+		controls.add(play);
+		//controls.setTitle("ApplPi#3.1 sourceforge.net/projects/applpi (c) 2009-2013 Daniel Hollingsworth");
+		/*controls.setLayout(new GridLayout(3, 6, 0, 0));
 
-				if (getCurComp() == 0) {
-					prev.setEnabled(false);
-				}
-				if (getCurComp() < maxIndex) {
-					next.setEnabled(true);
-				}
-			}
-		});
-		prev.setEnabled(false);
+		ButtonGroup rabtnGroup; // bind radios
+		rdMoon = new JRadioButton("\u2648", true);
+		rdStout = new JRadioButton("\u2649");
+		rdCrisp = new JRadioButton("\u264A");
+		rdFlakes = new JRadioButton("\u264B");
+		rdLoops = new JRadioButton("\u264C");
+		rdBeer = new JRadioButton("\u264D");
+		rdCharm = new JRadioButton("\u264E");
+		rdCastle = new JRadioButton("\u264F");
+		rdRock = new JRadioButton("\u2650");
+		rdWicks = new JRadioButton("\u2651");
+		rdAle = new JRadioButton("\u2652");
+		rdCrunch = new JRadioButton("\u2653");
+		controls.add(rdMoon);
+		controls.add(rdStout);
+		controls.add(rdCrisp);
+		controls.add(rdFlakes);
+		controls.add(rdLoops);
+		controls.add(rdBeer);
+		controls.add(rdCharm);
+		controls.add(rdCastle);
+		controls.add(rdRock);
+		controls.add(rdWicks);
+		controls.add(rdAle);
+		controls.add(rdCrunch);
 
-		play = new JButton(new AbstractAction("Go") {
+		rabtnGroup = new ButtonGroup();
+		rabtnGroup.add( rdMoon );
+		rabtnGroup.add( rdStout );
+		rabtnGroup.add( rdCrisp );
+		rabtnGroup.add( rdFlakes );
+		rabtnGroup.add( rdLoops );
+		rabtnGroup.add( rdBeer );
+		rabtnGroup.add( rdCharm );
+		rabtnGroup.add( rdCastle );
+		rabtnGroup.add( rdRock );
+		rabtnGroup.add( rdWicks );
+		rabtnGroup.add( rdAle );
+		rabtnGroup.add( rdCrunch );
+
+		Component horizontalStrut_2 = Box.createHorizontalStrut(20);
+		Component horizontalStrut = Box.createHorizontalStrut(20);
+		controls.add(horizontalStrut_2);
+		controls.add(horizontalStrut);
+
+		JButton play = new JButton(new AbstractAction("Go") {
 			public void actionPerformed(ActionEvent e) {
+				compositions[getCurComp()].setRoot((Double) rootSpinner.getValue() / 16d);
 				togglePlay();
 			}
 		});
-
-		next = new JButton(new AbstractAction(">") {
-			public void actionPerformed(ActionEvent e) {
-				if (isPlaying()) {
-					togglePlay();
-				}
-				if (incCurComp()) {
-					compositions[getCurComp()].startPlaying();
-					compositions[getCurComp()].setRoot((Double)
-							rootSpinner.getValue() / 16d);
-					togglePlay();
-				}
-
-				if (getCurComp() == maxIndex) {
-					next.setEnabled(false);
-				}
-				if (getCurComp() > 0) {
-					prev.setEnabled(true);
-				}
-			}
-		});
+		controls.add(play);
 
 		rootSpinner = new JSpinner(new SpinnerNumberModel(DEFAULT_ROOT, 1,
 				20000000, 1));
 		rootSpinner.addChangeListener(new ChangeListener() {
 			public void stateChanged(ChangeEvent e) {
-				compositions[getCurComp()].setRoot((Double) rootSpinner
-						.getValue() / 16d);
+				compositions[getCurComp()].setRoot((Double)
+						rootSpinner.getValue() / 16d);
 			}
 		});
-
+		controls.add(rootSpinner);*/
+	}
+/*
 		JButton addTrack = new JButton(new AbstractAction("+") {
-
 			public void actionPerformed(ActionEvent e) {
 				Tracks.instance().addTrack();
 			}
 		});
-
-		setFloatable(false);
-		JPanel content = new JPanel();
-		content.add(prev);
-		content.add(play);
-		content.add(next);
-		content.add(rootSpinner);
-		add(content);
-	}
+*/
 }

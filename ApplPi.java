@@ -1,31 +1,36 @@
 // Decompiled from classes via JD-Gui: http://jd.benow.ca/
 
 import com.github.hollingsworthd.applpi.gui.Main;
-import java.awt.Container;
+import java.awt.EventQueue;
 import javax.swing.JFrame;
-import javax.swing.SwingUtilities;
 
 public class ApplPi extends JFrame
 {
-  public static void main(String[] args)
+	private static final long serialVersionUID = 1L;
+
+public static void main(String[] args)
   {
-	try
+	//ApplPi ban = new ApplPi();
+	EventQueue.invokeLater( new Runnable()
 	{
-		SwingUtilities.invokeAndWait(new Runnable() {
-			public void run() {
-				new ApplPi();
+		public void run()
+		{
+			try
+			{
+				ApplPi frame = new ApplPi();
+				System.out.println( "Outer" );
+			} catch (Exception e)
+			{
+				e.printStackTrace();
 			}
-		} );
-	}
-	catch (Exception e) {
-	  e.printStackTrace();
-	}
+		}
+	} );
   }
 
   private ApplPi() {
 	Main view = new Main();
 	getContentPane().add(view);
-	setTitle("ApplPi#3.1 sourceforge.net/projects/applpi (c) 2009-2013 Daniel Hollingsworth");
+	setTitle("ApplPi3.1 sourceforge.net/projects/applpi (c)2009-13 D Hollingsworth");
 	setSize(600, 80);
 	setDefaultCloseOperation(3);
 	setVisible(true);
