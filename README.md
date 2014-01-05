@@ -1,4 +1,4 @@
-ApplPi
+ApplPi 3.A
 ======
 
 A stochastic noise machine implemented in Java, a "reimplementation of the Freeverb project". Originally created by [D Hollingsworth](https://github.com/hollingsworthd) and moved [to sourceforge](https://sourceforge.net/p/applpi). Affero GPL(v3?). 

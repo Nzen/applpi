@@ -25,6 +25,7 @@ import java.awt.event.ActionEvent;
 import javax.swing.AbstractAction;
 import javax.swing.Box;
 import java.awt.Component;
+import java.awt.FlowLayout;
 import java.awt.GridLayout;
 import javax.swing.JToolBar;
 import javax.swing.JButton;
@@ -77,17 +78,17 @@ public class Radiobar extends JToolBar {
 	protected JButton play;
 
 	public Radiobar() {
-		setBounds( 100, 100, 520, 148 );
+		setBounds( 0, 0, 500, 160 );
 		setBorder( new EmptyBorder( 5, 5, 5, 5 ) );
-		setLayout(new GridLayout(3, 6, 0, 0));
+		setLayout(new FlowLayout() );//GridLayout(3, 6, 0, 0));
 
 		addRadios();
 		addCompositions();
 
-		Component horizontalStrut_2 = Box.createHorizontalStrut(20);
+		/*Component horizontalStrut_2 = Box.createHorizontalStrut(20);
 		Component horizontalStrut = Box.createHorizontalStrut(20);
 		add(horizontalStrut_2);
-		add(horizontalStrut);
+		add(horizontalStrut);*/
 		
 		play = new JButton(new AbstractAction("Play") {
 			private static final long serialVersionUID = -761L;

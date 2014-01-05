@@ -29,7 +29,7 @@ public static void main(String[] args)
 	Main view = new Main();
 	getContentPane().add(view);
 	setTitle("ApplPi 3.2 sourceforge.net/projects/applpi c:2009-13 D Hollingsworth");
-	setSize(900, 160);
+	setSize(777, 100);
 	setDefaultCloseOperation(3);
 	setVisible(true);
   }
