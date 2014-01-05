@@ -26,8 +26,6 @@ import javax.swing.AbstractAction;
 import javax.swing.Box;
 import java.awt.Component;
 import java.awt.GridLayout;
-import javax.swing.JFrame;
-import javax.swing.JPanel;
 import javax.swing.JToolBar;
 import javax.swing.JButton;
 import javax.swing.JSpinner;
@@ -52,111 +50,71 @@ import com.github.hollingsworthd.applpi.composition.SummerAle;
 import com.github.hollingsworthd.applpi.composition.ToastCrunch;
 import com.github.hollingsworthd.applpi.core.Composition;
 import com.github.hollingsworthd.applpi.core.Play;
+import com.github.hollingsworthd.applpi.gui.Chan;
 
 public class Radiobar extends JToolBar {
 	private static final long serialVersionUID = 1L;
 	private static final double DEFAULT_ROOT = 440;
-	private static double root = DEFAULT_ROOT / 16;
-	private Composition[] compositions = new Composition[] { new LuckyCharms(),
-			new FruitLoops(), new FrostedFlakes(), new CookieCrisp(),
-			new ToastCrunch(), new SummerAle(), new Newcastle(),
-			new Guinness(), new ChocolateStout(), new BlueMoon(),
-			new RollingRock(), new Smithwicks(), };
-	//private int curComp = 0;
+	//private static double root = DEFAULT_ROOT / 16;
+	private Composition[] compositions;
 	private Thread thread = null;
 	private boolean isPlaying = false;
-	//private JPanel controls;
-	JRadioButton rdMoon;
-	JRadioButton rdStout;
-	JRadioButton rdCrisp;
-	JRadioButton rdFlakes;
-	JRadioButton rdLoops;
-	JRadioButton rdBeer;
-	JRadioButton rdCharm;
-	JRadioButton rdCastle;
-	JRadioButton rdRock;
-	JRadioButton rdWicks;
-	JRadioButton rdAle;
-	JRadioButton rdCrunch;
-	JSpinner rootSpinner;
-
-	public synchronized boolean isPlaying() {
-		return isPlaying;
-	}
-
-	public synchronized void setPlaying(boolean isPlaying) {
-		this.isPlaying = isPlaying;
-	}
-
-	public synchronized int getCurComp() {
-		if( rdMoon.isSelected() )
-			{ return 0; }
-		else if( rdStout.isSelected() )
-			{ return 1; }
-		else if( rdCrisp.isSelected() )
-			{ return 2; }
-		else if( rdFlakes.isSelected() )
-			{ return 3; }
-		else if( rdLoops.isSelected() )
-			{ return 4; }
-		else if( rdBeer.isSelected() )
-			{ return 5; }
-		else if( rdCharm.isSelected() )
-			{ return 6; }
-		else if( rdCastle.isSelected() )
-			{ return 7; }
-		else if( rdRock.isSelected() )
-			{ return 8; }
-		else if( rdWicks.isSelected() )
-			{ return 9; }
-		else if( rdAle.isSelected() )
-			{ return 10; }
-		else //if( rdCrunch.isSelected() )
-			{ return 11; }
-	}
-
-	public void close() {
-		if (isPlaying()) {
-			togglePlay();
-		}
-	}
-
-	private void togglePlay() {
-		if (isPlaying()) {
-			compositions[getCurComp()].stopPlaying();
-			setPlaying(false);
-		} else {
-			try {
-				if (thread != null) {
-					thread.join();
-				}
-			} catch (InterruptedException e1) {
-				// do nothing
-			}
-			compositions[getCurComp()].startPlaying();
-			thread = new Thread(new Play(compositions[getCurComp()]));
-			setPlaying(true);
-			thread.start();
-		}
-		//play.setSelected(isPlaying());
-	}
+	private int whichChan = 0;
+	protected JRadioButton rdMoon;
+	protected JRadioButton rdStout;
+	protected JRadioButton rdCrisp;
+	protected JRadioButton rdFlakes;
+	protected JRadioButton rdLoops;
+	protected JRadioButton rdBeer;
+	protected JRadioButton rdCharm;
+	protected JRadioButton rdCastle;
+	protected JRadioButton rdRock;
+	protected JRadioButton rdWicks;
+	protected JRadioButton rdAle;
+	protected JRadioButton rdCrunch;
+	protected ButtonGroup rabtnGroup;
+	protected JSpinner rootSpinner;
+	protected JButton play;
 
 	public Radiobar() {
 		setBounds( 100, 100, 520, 148 );
-		//controls = new JPanel();
 		setBorder( new EmptyBorder( 5, 5, 5, 5 ) );
-		//controls.setContentPane( );
-		//JButton play = new JButton("ab");
-		//controls.add(play);
-		//controls.setTitle("ApplPi#3.1 sourceforge.net/projects/applpi (c) 2009-2013 Daniel Hollingsworth");
 		setLayout(new GridLayout(3, 6, 0, 0));
 
-		ButtonGroup rabtnGroup; // bind radios
+		addRadios();
+		addCompositions();
+
+		Component horizontalStrut_2 = Box.createHorizontalStrut(20);
+		Component horizontalStrut = Box.createHorizontalStrut(20);
+		add(horizontalStrut_2);
+		add(horizontalStrut);
+		
+		play = new JButton(new AbstractAction("Play") {
+			private static final long serialVersionUID = -761L;
+			public void actionPerformed(ActionEvent e) {
+				compositions[currChan()].setRoot( adjSpinner() );
+				togglePlay();
+			}
+		});
+		add(play);
+
+		rootSpinner = new JSpinner(new SpinnerNumberModel(DEFAULT_ROOT, 1,
+				20000000, 1));
+		rootSpinner.addChangeListener(new ChangeListener() {
+			public void stateChanged(ChangeEvent e) {
+				compositions[currChan()].setRoot( adjSpinner() );
+			}
+		});
+		add(rootSpinner);
+	}
+
+	private void addRadios()
+	{
 		rdMoon = new JRadioButton("\u2648", true);
 		rdStout = new JRadioButton("\u2649");
 		rdCrisp = new JRadioButton("\u264A");
-		rdFlakes = new JRadioButton("\u264B");
-		rdLoops = new JRadioButton("\u264C");
+		rdFlakes = new JRadioButton("\u264B"); // these are unicode
+		rdLoops = new JRadioButton("\u264C"); // astrological signs
 		rdBeer = new JRadioButton("\u264D");
 		rdCharm = new JRadioButton("\u264E");
 		rdCastle = new JRadioButton("\u264F");
@@ -177,7 +135,7 @@ public class Radiobar extends JToolBar {
 		add(rdAle);
 		add(rdCrunch);
 
-		rabtnGroup = new ButtonGroup();
+		rabtnGroup = new ButtonGroup(); // bind radios
 		rabtnGroup.add( rdMoon );
 		rabtnGroup.add( rdStout );
 		rabtnGroup.add( rdCrisp );
@@ -190,35 +148,91 @@ public class Radiobar extends JToolBar {
 		rabtnGroup.add( rdWicks );
 		rabtnGroup.add( rdAle );
 		rabtnGroup.add( rdCrunch );
-
-		Component horizontalStrut_2 = Box.createHorizontalStrut(20);
-		Component horizontalStrut = Box.createHorizontalStrut(20);
-		add(horizontalStrut_2);
-		add(horizontalStrut);
-
-		JButton play = new JButton(new AbstractAction("Go") {
-			public void actionPerformed(ActionEvent e) {
-				compositions[getCurComp()].setRoot((Double) rootSpinner.getValue() / 16d);
-				togglePlay();
-			}
-		});
-		add(play);
-
-		rootSpinner = new JSpinner(new SpinnerNumberModel(DEFAULT_ROOT, 1,
-				20000000, 1));
-		rootSpinner.addChangeListener(new ChangeListener() {
-			public void stateChanged(ChangeEvent e) {
-				compositions[getCurComp()].setRoot((Double)
-						rootSpinner.getValue() / 16d);
-			}
-		});
-		add(rootSpinner);
 	}
-/*
-		JButton addTrack = new JButton(new AbstractAction("+") {
-			public void actionPerformed(ActionEvent e) {
-				Tracks.instance().addTrack();
+
+	private void addCompositions() // not the most optimized way :|
+	{
+		compositions  = new Composition[ Chan.CRUNC.i + 1 ]; // assuming it is the last one
+		compositions[ Chan.ALE.i ] = new SummerAle();
+		compositions[ Chan.BEER.i ] = new Guinness();
+		compositions[ Chan.CASTL.i ] = new Newcastle();
+		compositions[ Chan.CHARM.i ] = new LuckyCharms();
+		compositions[ Chan.CRISP.i ] = new CookieCrisp();
+		compositions[ Chan.CRUNC.i ] = new ToastCrunch();
+		compositions[ Chan.FLAKE.i ] = new FrostedFlakes();
+		compositions[ Chan.LOOPS.i ] = new FruitLoops();
+		compositions[ Chan.MOON.i ] = new BlueMoon();
+		compositions[ Chan.ROCK.i ] = new RollingRock();
+		compositions[ Chan.STOUT.i ] = new ChocolateStout();
+		compositions[ Chan.WICKS.i ] = new Smithwicks();
+	}
+
+	public synchronized boolean isPlaying() {
+		return isPlaying;
+	}
+
+	public synchronized void setPlaying(boolean isPlaying) {
+		this.isPlaying = isPlaying;
+	}
+
+	public synchronized int currChan() {
+		if( rdMoon.isSelected() ) // these are indicies.
+			{ return Chan.MOON.i; }		// perhaps make an enum?
+		else if( rdStout.isSelected() )
+			{ return Chan.STOUT.i; }
+		else if( rdCrisp.isSelected() )
+			{ return Chan.CRISP.i; }
+		else if( rdFlakes.isSelected() )
+			{ return Chan.FLAKE.i; }
+		else if( rdLoops.isSelected() )
+			{ return Chan.LOOPS.i; }
+		else if( rdBeer.isSelected() )
+			{ return Chan.BEER.i; }
+		else if( rdCharm.isSelected() )
+			{ return Chan.CHARM.i; }
+		else if( rdCastle.isSelected() )
+			{ return Chan.CASTL.i; }
+		else if( rdRock.isSelected() )
+			{ return Chan.ROCK.i; }
+		else if( rdWicks.isSelected() )
+			{ return Chan.WICKS.i; }
+		else if( rdAle.isSelected() )
+			{ return Chan.ALE.i; }
+		else //( rdCrunch.isSelected() )
+			{ return Chan.CRUNC.i; }
+	}
+
+	private double adjSpinner()
+	{
+		return (Double) rootSpinner.getValue() / 16d;
+	}
+
+	public void close() {
+		if (isPlaying()) {
+			togglePlay();
+		}
+	}
+
+	private void togglePlay() {
+		if (isPlaying()) {
+			compositions[ whichChan ].stopPlaying();
+			whichChan = currChan();
+			setPlaying(false);
+			play.setText( "Play" );
+		} else {
+			try {
+				if (thread != null) {
+					thread.join();
+				}
+			} catch (InterruptedException e1) {
+				Thread.yield( ); // back of the thread queue for you
 			}
-		});
-*/
+			whichChan = currChan();
+			compositions[ whichChan ].startPlaying();
+			thread = new Thread( new Play(compositions[ currChan() ]) );
+			setPlaying(true);
+			thread.start();
+			play.setText( "Stop" );
+		}
+	}
 }

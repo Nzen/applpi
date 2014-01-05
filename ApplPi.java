@@ -10,7 +10,6 @@ public class ApplPi extends JFrame
 
 public static void main(String[] args)
   {
-	//ApplPi ban = new ApplPi();
 	EventQueue.invokeLater( new Runnable()
 	{
 		public void run()
@@ -29,7 +28,7 @@ public static void main(String[] args)
   private ApplPi() {
 	Main view = new Main();
 	getContentPane().add(view);
-	setTitle("ApplP i3.2 sourceforge.net/projects/applpi c:2009-13 D Hollingsworth");
+	setTitle("ApplPi 3.2 sourceforge.net/projects/applpi c:2009-13 D Hollingsworth");
 	setSize(900, 160);
 	setDefaultCloseOperation(3);
 	setVisible(true);

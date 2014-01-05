@@ -20,13 +20,10 @@
 
 package com.github.hollingsworthd.applpi.gui;
 
-import java.awt.GridLayout;
-
 import javax.swing.JPanel;
-import javax.swing.border.EmptyBorder;
 
 public class Main extends JPanel {
-	private static final long serialVersionUID = 1L;
+	private static final long serialVersionUID = 2L;
 	private Radiobar toolbar;
 
 	public Main(){
