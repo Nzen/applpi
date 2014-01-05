@@ -20,13 +20,10 @@
 
 package com.github.hollingsworthd.applpi.gui;
 
+import java.util.Random;
 import java.awt.event.ActionEvent;
-
 import javax.swing.AbstractAction;
-import javax.swing.Box;
-import java.awt.Component;
 import java.awt.FlowLayout;
-import java.awt.GridLayout;
 import javax.swing.JToolBar;
 import javax.swing.JButton;
 import javax.swing.JSpinner;
@@ -54,9 +51,9 @@ import com.github.hollingsworthd.applpi.core.Play;
 import com.github.hollingsworthd.applpi.gui.Chan;
 
 public class Radiobar extends JToolBar {
-	private static final long serialVersionUID = 1L;
-	private static final double DEFAULT_ROOT = 440;
-	//private static double root = DEFAULT_ROOT / 16;
+	private static final long serialVersionUID = 100L;
+	private static final int MAX = 20000000;
+	private static double DEFAULT_ROOT;
 	private Composition[] compositions;
 	private Thread thread = null;
 	private boolean isPlaying = false;
@@ -78,35 +75,14 @@ public class Radiobar extends JToolBar {
 	protected JButton play;
 
 	public Radiobar() {
-		setBounds( 0, 0, 500, 160 );
+		setBounds( 0, 0, 777, 100 );
 		setBorder( new EmptyBorder( 5, 5, 5, 5 ) );
-		setLayout(new FlowLayout() );//GridLayout(3, 6, 0, 0));
+		setLayout( new FlowLayout() );
 
 		addRadios();
 		addCompositions();
-
-		/*Component horizontalStrut_2 = Box.createHorizontalStrut(20);
-		Component horizontalStrut = Box.createHorizontalStrut(20);
-		add(horizontalStrut_2);
-		add(horizontalStrut);*/
-		
-		play = new JButton(new AbstractAction("Play") {
-			private static final long serialVersionUID = -761L;
-			public void actionPerformed(ActionEvent e) {
-				compositions[currChan()].setRoot( adjSpinner() );
-				togglePlay();
-			}
-		});
-		add(play);
-
-		rootSpinner = new JSpinner(new SpinnerNumberModel(DEFAULT_ROOT, 1,
-				20000000, 1));
-		rootSpinner.addChangeListener(new ChangeListener() {
-			public void stateChanged(ChangeEvent e) {
-				compositions[currChan()].setRoot( adjSpinner() );
-			}
-		});
-		add(rootSpinner);
+		addButton();
+		addSpinner();
 	}
 
 	private void addRadios()
@@ -168,8 +144,47 @@ public class Radiobar extends JToolBar {
 		compositions[ Chan.WICKS.i ] = new Smithwicks();
 	}
 
+	private void addButton()
+	{
+		play = new JButton(new AbstractAction("Play") {
+			private static final long serialVersionUID = -761L;
+			public void actionPerformed(ActionEvent e) {
+				compositions[currChan()].setRoot( adjSpinner() );
+				togglePlay();
+			}
+		});
+		add(play);
+	}
+
+	private void addSpinner()
+	{
+		Random bla = new Random( );
+		DEFAULT_ROOT = bla.nextInt( MAX / 10000 );
+		bla = null;
+
+		rootSpinner = new JSpinner(new SpinnerNumberModel(DEFAULT_ROOT, 1,
+				MAX, 1));
+		rootSpinner.addChangeListener(new ChangeListener() {
+			public void stateChanged(ChangeEvent e) {
+				compositions[currChan()].setRoot( adjSpinner() );
+			}
+		});
+		add(rootSpinner);
+	}
+
+	private double adjSpinner()
+	{
+		return (Double) rootSpinner.getValue() / 16d;
+	}
+
 	public synchronized boolean isPlaying() {
 		return isPlaying;
+	}
+
+	public void close() {
+		if (isPlaying()) {
+			togglePlay();
+		}
 	}
 
 	public synchronized void setPlaying(boolean isPlaying) {
@@ -177,8 +192,8 @@ public class Radiobar extends JToolBar {
 	}
 
 	public synchronized int currChan() {
-		if( rdMoon.isSelected() ) // these are indicies.
-			{ return Chan.MOON.i; }		// perhaps make an enum?
+		if( rdMoon.isSelected() )
+			{ return Chan.MOON.i; }
 		else if( rdStout.isSelected() )
 			{ return Chan.STOUT.i; }
 		else if( rdCrisp.isSelected() )
@@ -201,17 +216,6 @@ public class Radiobar extends JToolBar {
 			{ return Chan.ALE.i; }
 		else //( rdCrunch.isSelected() )
 			{ return Chan.CRUNC.i; }
-	}
-
-	private double adjSpinner()
-	{
-		return (Double) rootSpinner.getValue() / 16d;
-	}
-
-	public void close() {
-		if (isPlaying()) {
-			togglePlay();
-		}
 	}
 
 	private void togglePlay() {
